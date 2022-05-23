@@ -14,19 +14,14 @@ function calculatePosition({ element, container, position, scrollPosition }) {
   const elementRect = element.getBoundingClientRect()
   const containerRect = container === window ? getWindowRect() : container.getBoundingClientRect()
 
-  return (
-    elementRect.top + scrollPosition - containerRect.top + position.element * elementRect.height - 
-    containerRect.height * position.container
-  )
+  const offsetTop = elementRect.top + scrollPosition - containerRect.top
+  const elementPosition = position.element.anchor * elementRect.height + (position.element.offset ?? 0)
+  const containerPosition = position.container.anchor * containerRect.height + (position.container.offset ?? 0)
+
+  return offsetTop + elementPosition - containerPosition
 }
 
-export function onScrollProgression({
-  element, 
-  start, 
-  end, 
-  clamp = true,
-  onChange
-}) {
+export function onScrollProgression({ element, start, end, onChange }) {
   const container = getOverflowContainer(element) ?? window
   if (process.env.NODE_ENV !== 'production') warnIfNotScrollable(container)
 

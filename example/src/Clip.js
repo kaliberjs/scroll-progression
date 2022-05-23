@@ -1,6 +1,6 @@
 import { animated, useSpring } from 'react-spring'
 import { lerp } from '@kaliber/math'
-import { useScrollProgression, constants }  from '@kaliber/scroll-progression'
+import { useScrollProgression, constants as c }  from '@kaliber/scroll-progression'
 import styles from './Clip.css'
 
 export function Clip({ children }) {
@@ -10,8 +10,8 @@ export function Clip({ children }) {
   }))
 
   const { ref } = useScrollProgression({
-    start: { element: constants.top, container: 0.9 },
-    end: { element: constants.top, container: 0.25 },
+    start: { element: c.top, container: { anchor: 0.9 } },
+    end: { element: c.top, container: { anchor: 0.9, offset: -200 } },
     onChange(progression) {
       spring.start({ clip: easeOut(progression) })
     }

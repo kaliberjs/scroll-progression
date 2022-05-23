@@ -1,5 +1,5 @@
 export const constants = {
-  top: 0,
-  center: 0.5,
-  bottom: 1,
+  top: { anchor: 0 },
+  center: { anchor: 0.5 },
+  bottom: { anchor: 1 },
 }

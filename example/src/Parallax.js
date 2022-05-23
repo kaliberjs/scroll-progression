@@ -1,6 +1,6 @@
 import { animated, useSpring } from 'react-spring'
 import { lerp } from '@kaliber/math'
-import { useScrollProgression, constants }  from '@kaliber/scroll-progression'
+import { useScrollProgression, constants as c }  from '@kaliber/scroll-progression'
 import styles from './Parallax.css'
 
 export function Parallax({ src, distance, layoutClassName = undefined }) {
@@ -10,8 +10,8 @@ export function Parallax({ src, distance, layoutClassName = undefined }) {
   }))
 
   const { ref } = useScrollProgression({
-    start: { element: constants.top, container: constants.bottom },
-    end: { element: constants.bottom, container: constants.top },
+    start: { element: c.top, container: c.bottom },
+    end: { element: c.bottom, container: c.top },
     onChange(progression) {
       spring.start({ y: lerp({ start: -distance, end: distance, input: progression }) })
     }
@@ -30,8 +30,4 @@ export function Parallax({ src, distance, layoutClassName = undefined }) {
       />
     </div>
   )
-}
-
-function easeInOut(x) {
-  return -(Math.cos(Math.PI * x) - 1) / 2
 }

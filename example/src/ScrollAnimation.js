@@ -1,5 +1,5 @@
 import { useSpring } from 'react-spring'
-import { useScrollProgression, constants }  from '@kaliber/scroll-progression'
+import { useScrollProgression, constants as c }  from '@kaliber/scroll-progression'
 import { Arc } from '/Arc'
 import styles from './ScrollAnimation.css'
 
@@ -10,8 +10,8 @@ export function ScrollAnimation({ layoutClassName = undefined }) {
   }))
 
   const { ref } = useScrollProgression({
-    start: { element: constants.bottom, container: constants.bottom },
-    end: { element: constants.top, container: constants.top },
+    start: { element: c.bottom, container: c.bottom },
+    end: { element: c.top, container: c.top },
     onChange(progression) {
       spring.start({ to: easeInOut(progression) * 360 })
     }

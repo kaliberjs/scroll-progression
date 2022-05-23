@@ -1,7 +1,7 @@
-import { animated, useSpring, config } from 'react-spring'
+import { animated, useSpring } from 'react-spring'
 import { sequence } from '@kaliber/math'
 import { useElementSize } from '@kaliber/use-element-size'
-import { useScrollProgression, constants }  from '@kaliber/scroll-progression'
+import { useScrollProgression, constants as c }  from '@kaliber/scroll-progression'
 import styles from './Marquee.css'
 
 export function MarqueeLtr({ children }) {
@@ -66,8 +66,8 @@ function MarqueeBase({ progression, direction, children }) {
 function useAnimatedScrollProgression() {
   const [{ progression }, spring] = useSpring(() => ({ progression: 0, config: { tension: 500, friction: 35 } }))
   const { ref } = useScrollProgression({
-    start: { element: constants.top, container: constants.bottom },
-    end: { element: constants.bottom, container: constants.top },
+    start: { element: c.top, container: c.bottom },
+    end: { element: c.bottom, container: c.top },
     onChange(progression) { spring.start({ progression }) }
   })
 
