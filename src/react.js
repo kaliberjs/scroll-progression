@@ -1,6 +1,8 @@
-import { onScrollProgressionChange } from './core'
+import React from 'react'
 
-export function useScrollProgressionChange({
+import { onScrollProgression } from './core'
+
+export function useScrollProgression({
   start, 
   end, 
   clamp = true,
@@ -14,7 +16,7 @@ export function useScrollProgressionChange({
     () => {
       if (!node) return
       
-      return onScrollProgressionChange({
+      return onScrollProgression({
         element: node, 
         start, 
         end, 

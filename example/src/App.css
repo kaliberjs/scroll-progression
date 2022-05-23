@@ -1,4 +1,36 @@
 .component {
-  position: absolute;
-  margin: 20px;
+  isolation: isolate;
+  padding-top: clamp(540px, 100vw, 1080px);
+  padding-bottom: clamp(540px, 100vw, 1080px);
+
+  & > * {
+    max-width: 1920px;
+    margin-inline: auto;
+  }
+
+  & > .parallax,
+  & > .scrollAnimation {
+    height: clamp(540px, 100vw / (16 / 9), 1920px / (16 / 9));
+  }
+
+  &::before {
+    content: 'Scroll down ↓';
+    position: absolute;
+    top: 50vh;
+    left: 50%;
+    transform: translate(-50%);
+  }
+}
+
+.componentContent {
+  & > * {
+    max-width: 66ch;
+    margin-inline: auto;
+  }
+}
+
+.marquees {
+  background: black;
+  color: white;
+  padding-block: 2em;
 }

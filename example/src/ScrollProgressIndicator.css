@@ -1,0 +1,17 @@
+.component {
+  isolation: isolate;
+  contain: style layout paint;
+
+  & > .indicator {
+    position: sticky;
+    z-index: 1;
+    top: 0;
+  }
+}
+
+.indicator {
+  height: 10px !important;
+  background: #f64cc0;
+  transform-origin: left;
+  will-change: transform;
+}

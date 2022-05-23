@@ -1,0 +1,47 @@
+.componentLtr,
+.componentRtl,
+.componentMarquees {
+  overflow: hidden;
+  contain: style layout paint;
+  isolation: isolate;
+  text-rendering: optimizeSpeed;
+  
+  & > * {
+    width: 100%;
+  }
+}
+
+.componentLtr {
+  --direction: row-reverse;
+}
+
+.componentRtl {
+  --direction: row;
+}
+
+.componentMarquees {
+  & > :nth-child(odd) {
+    --direction: row-reverse;
+  }
+
+  & > :nth-child(even) {
+    --direction: row;
+  }
+}
+
+.componentBase {
+  will-change: transform;
+  display: flex;
+  flex-direction: var(--direction);
+}
+
+.items {
+  display: flex;
+  will-change: transform;
+  font-size: clamp(4rem, 20vw, 8rem);
+  font-weight: 800;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1;
+}

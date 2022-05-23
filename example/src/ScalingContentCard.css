@@ -1,0 +1,62 @@
+.component {
+  --overlap: min(300px, 50vw);
+  --padding-inline: 50px;
+  --padding-block: 100px;
+
+  isolation: isolate;
+  contain: style layout;
+
+  & > .content {
+    position: relative;
+    z-index: 1;
+    margin-top: calc(-1 * var(--overlap));
+  }
+}
+
+.header {
+  isolation: isolate;
+  display: grid;
+  font-size: clamp(1.5rem, 7.5vw, 2.5rem);
+  color: white;
+  place-items: center;
+
+  & > * {
+    min-width: 0;
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+  }
+
+  & > .title {
+    z-index: 1;
+  }
+}
+
+.title {
+  font-weight: bold;
+  padding-inline: var(--padding);
+  text-align: center;
+  color: white;
+  font-size: clamp(2rem, 10vw, 3rem);
+}
+
+.image {
+  aspect-ratio: 4 / 3;
+  border-top-left-radius: 1em;
+  border-top-right-radius: 1em;
+  will-change: transform;
+  transform-origin: bottom;
+  object-fit: cover;
+}
+
+.content {
+  padding-top: calc(var(--overlap) + var(--padding-block));
+  padding-bottom: var(--padding-block);
+  padding-inline: var(--padding-inline);
+  background: linear-gradient(
+    to bottom, 
+    rgba(255, 255, 255, 0) 0px, 
+    rgba(255, 255, 255, 1) var(--overlap)
+  );
+  font-size: clamp(1rem, 5vw, 1.5rem);
+  line-height: 1.5;
+}

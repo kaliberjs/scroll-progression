@@ -1,0 +1,8 @@
+.component {
+  contain: style layout paint;
+  will-change: opacity;
+}
+
+.clip {
+  will-change: clip-path;
+}

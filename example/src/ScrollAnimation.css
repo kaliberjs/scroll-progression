@@ -1,0 +1,11 @@
+.component {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  stroke: white;
+  background: #A8E536;
+}
+
+.container {
+  contain: style layout paint;
+}
