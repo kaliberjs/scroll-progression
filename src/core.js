@@ -1,20 +1,22 @@
 import { unlerp } from '@kaliber/math'
 
-function calculateScrollProgression({ element, container, start, end, clamp = true }) {
+function calculateScrollProgression({ element, container, start, end }) {
   const scrollPosition = container === window ? window.scrollY : container.scrollTop
   return unlerp({
-    start: calculatePosition({ element, container, position: start }),
-    end: calculatePosition({ element, container, position: end }),
-    clamp,
+    start: calculatePosition({ element, container, position: start, scrollPosition }),
+    end: calculatePosition({ element, container, position: end, scrollPosition }),
+    clamp: true,
     input: scrollPosition
   })
 }
 
-function calculatePosition({ element, container, position }) {
-  const containerHeight = container === window ? window.innerHeight : container.offsetHeight
+function calculatePosition({ element, container, position, scrollPosition }) {
+  const elementRect = element.getBoundingClientRect()
+  const containerRect = container === window ? getWindowRect() : container.getBoundingClientRect()
+
   return (
-    element.offsetTop + position.element * element.offsetHeight - 
-    containerHeight * position.container
+    elementRect.top + scrollPosition - containerRect.top + position.element * elementRect.height - 
+    containerRect.height * position.container
   )
 }
 
@@ -28,15 +30,25 @@ export function onScrollProgression({
   const container = getOverflowContainer(element) ?? window
   if (process.env.NODE_ENV !== 'production') warnIfNotScrollable(container)
 
-  handleScroll()
-  container.addEventListener('scroll', handleScroll)
-  return () => { container.removeEventListener('scroll', handleScroll) }
+  handleScrollProgressionChange()
+  
+  const observer = new ResizeObserver(handleScrollProgressionChange)
 
-  // TODO: add resize listener
-  // TODO: add resize observer
+  if (container !== window) {
+    observer.observe(container)
+  }
 
-  function handleScroll() {
-    onChange(calculateScrollProgression({ element, container, start, end, clamp }))
+  container.addEventListener('scroll', handleScrollProgressionChange)
+  container.addEventListener('resize', handleScrollProgressionChange)
+
+  return () => { 
+    container.removeEventListener('scroll', handleScrollProgressionChange) 
+    container.removeEventListener('resize', handleScrollProgressionChange) 
+    observer.disconnect()
+  }
+
+  function handleScrollProgressionChange() {
+    onChange(calculateScrollProgression({ element, container, start, end }))
   }
 }
 
@@ -55,4 +67,15 @@ function getOverflowContainer(element) {
     .getPropertyValue(x)).some(x => x === 'auto' || x === 'scroll')
 
   return isOverflowContainer ? parent : getOverflowContainer(parent)
+}
+
+function getWindowRect() {
+  return {
+    width: window.innerWidth,
+    height: window.innerHeight,
+    left: 0,
+    top: 0,
+    right: window.innerWidth,
+    bottom: window.innerHeight
+  }
 }
