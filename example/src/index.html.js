@@ -8,7 +8,7 @@ export default (
   <html lang='en'>
     <head>
       <meta charSet='utf-8' />
-      <title>Library</title>
+      <title>@kaliber/scroll-progression</title>
       <meta name='viewport' content='width=device-width, initial-scale=1' />
       {stylesheet}
       {javascript}

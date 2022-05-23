@@ -1,20 +1,4 @@
-# BEFORE YOU PUBLISH
-- Read [Libraries van Kaliber](https://docs.google.com/document/d/1FrJi-xWtKkbocyMVK5A5_hupjl5E4gD4rDvATDlxWyc/edit#heading=h.bb3md3gyf493).
-- Make sure your example works.
-- Make sure your package.json is correct. Have you change the library title?
-- Update the bin/postInstall script. It should refer to your library.
-- Update the `<title>` tag in `index.html.js`.
-- Remove 'BEFORE YOU PUBLISH' and 'PUBLISHING' from this document.
-
-# PUBLISHING
-- Make sure you are added to the kaliber organization on NPM
-- run `yarn publish`
-- Enter a correct version, we adhere to semantic versioning (semver)
-- run `git push`
-- run `git push --tags`
-- Send everybody an email to introduce them to your library!
-
-# Library title
+# `@kaliber/scroll-progression`
 Track the scroll progression between two points within an overflow container as a normalized number between 0 and 1. 
 
 ## Motivation
@@ -26,6 +10,8 @@ Animating things in reaction to scroll should be easy, also if you don't want to
   - [Usage with React](#usage-with-react)
   - [Usage with `react-spring`](#usage-with-react-spring)
 - [Tips & Gotcha's](#tips--gotchas)
+  - [Do NOT use `vh` units in your page](#do-not-use-vh-units-in-your-page)
+  - [Optimize performance with css `contain`](#optimize-performance-with-css-contain)
 
 ## Installation
 
