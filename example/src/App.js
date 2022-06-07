@@ -15,7 +15,7 @@ export function App() {
       <main className={styles.component}>
         <ScalingContentCard 
           src={imageContentCard} 
-          title={<>@kaliber/<wbr />scroll&#8209;progression</>}
+          title={<>@kaliber/<wbr />scroll‑progression</>}
         >
           <Content>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias porro, natus distinctio similique velit maxime exercitationem debitis cupiditate magnam perspiciatis fugiat? Porro quis blanditiis autem pariatur, ut veniam alias illum!</p>

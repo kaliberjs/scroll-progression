@@ -29,7 +29,7 @@ When working with `@kaliber/build`, add `/@kaliber\/scroll-progression/` to your
 
 ## Usage
 
-This library tracks to progression of a given element between two points within it overflowing container. These two points are called scroll triggers. A scroll trigger consists of an `anchor` and (optionally) an `offset`. The anchor is a relative value based on the container's height. `0` means the top of the container, `1` means the bottom. If you need to increase or decrease with an amount of pixels, you can use the `offset` property for this. 
+This library tracks to progression of a given element between two points within its overflowing container. These two points are called scroll triggers. A scroll trigger consists of an `anchor` and (optionally) an `offset`. The anchor is a relative value based on the container's height. `0` means the top of the container, `1` means the bottom. If you need to increase or decrease with an amount of pixels, you can use the `offset` property for this. 
 
 For instance: a scroll trigger describing the point 100 pixels below the top of an element is described as follows:
 
