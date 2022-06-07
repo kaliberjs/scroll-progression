@@ -57,9 +57,9 @@ function getOverflowContainer(element) {
   const parent = element.parentNode
   if (!(parent instanceof Element)) return null
 
+  const style = getComputedStyle(parent, null)
   const isOverflowContainer = ['overflow', 'overflow-x', 'overflow-y']
-    .map(x => getComputedStyle(parent, null)
-    .getPropertyValue(x)).some(x => x === 'auto' || x === 'scroll')
+    .some(x => ['auto', 'scroll'].includes(style.getPropertyValue(x)))
 
   return isOverflowContainer ? parent : getOverflowContainer(parent)
 }
