@@ -3,8 +3,6 @@ import { unlerp } from '@kaliber/math'
 export function onScrollProgression({ element, start, end, onChange }) {
   const container = getContainer(element)
 
-  if (process.env.NODE_ENV !== 'production') warnIfNotScrollable(container)
-
   handleScrollProgressionChange()
   
   return container.onScrollProgressionChange(handleScrollProgressionChange)
@@ -101,10 +99,4 @@ function getOverflowContainer(element) {
     .some(x => ['auto', 'scroll'].includes(style.getPropertyValue(x)))
 
   return isOverflowContainer ? parent : getOverflowContainer(parent)
-}
-
-function warnIfNotScrollable(container) {
-  if (container.getCanScroll()) {
-    console.warn('It seems the overflow container of this element isn\'t scrollable. This might be a mistake, since nothing will be animated in this case.')
-  }
 }
