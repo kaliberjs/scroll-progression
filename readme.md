@@ -172,6 +172,9 @@ If you have a large page with animated components, you might start to notice som
 
 __🚨 Gotcha:__ *If you put `contain: layout;` on an element, don't but the `ref` returned by `useScrollProgression` on the same element.*
 
+### Transforms
+This library uses `getBoundingClientRect()` to determine to position of objects on the screen. If you translate objects (or parents of objects) you're tracking within an overflow container, **transforms are taken into account** when calculating the position of the tracked element. This is probably what you want, but can be unexpected if you assumed `offsetTop` was used.
+
 ---
 
 ![](https://media.giphy.com/media/xvqIOHfQvth5NeoT0Y/giphy.gif)
