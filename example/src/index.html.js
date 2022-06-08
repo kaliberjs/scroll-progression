@@ -18,7 +18,10 @@ export default (
       />
     </head>
     <body>
-      <App />
+      {/* Enable to test the elementContainer */}
+      {/* <div style={{ height: '50vh', overflow: 'auto' }}> */}
+        <App />
+      {/* </div> */}
     </body>
   </html>
 )

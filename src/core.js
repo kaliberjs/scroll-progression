@@ -1,7 +1,21 @@
 import { unlerp } from '@kaliber/math'
 
+export function onScrollProgression({ element, start, end, onChange }) {
+  const container = getContainer(element)
+
+  if (process.env.NODE_ENV !== 'production') warnIfNotScrollable(container)
+
+  handleScrollProgressionChange()
+  
+  return container.onScrollProgressionChange(handleScrollProgressionChange)
+
+  function handleScrollProgressionChange() {
+    onChange(calculateScrollProgression({ element, container, start, end }))
+  }
+}
+
 function calculateScrollProgression({ element, container, start, end }) {
-  const scrollPosition = container === window ? window.scrollY : container.scrollTop
+  const scrollPosition = container.getScrollPosition()
   return unlerp({
     start: calculatePosition({ element, container, position: start, scrollPosition }),
     end: calculatePosition({ element, container, position: end, scrollPosition }),
@@ -12,7 +26,7 @@ function calculateScrollProgression({ element, container, start, end }) {
 
 function calculatePosition({ element, container, position, scrollPosition }) {
   const elementRect = element.getBoundingClientRect()
-  const containerRect = container === window ? getWindowRect() : container.getBoundingClientRect()
+  const containerRect = container.getRect()
 
   const offsetTop = elementRect.top + scrollPosition - containerRect.top
   const elementPosition = position.element.anchor * elementRect.height + (position.element.offset ?? 0)
@@ -21,41 +35,66 @@ function calculatePosition({ element, container, position, scrollPosition }) {
   return offsetTop + elementPosition - containerPosition
 }
 
-export function onScrollProgression({ element, start, end, onChange }) {
-  const container = getOverflowContainer(element) ?? window
-  if (process.env.NODE_ENV !== 'production') warnIfNotScrollable(container)
+function getContainer(element) {
+  const overflowContainer = getOverflowContainer(element)
+  return overflowContainer === window ? windowContainer() : elementContainer(overflowContainer)
+}
 
-  handleScrollProgressionChange()
-  
-  const observer = new ResizeObserver(handleScrollProgressionChange)
-
-  if (container !== window) {
-    observer.observe(container)
+function windowContainer() {
+  return {
+    getRect,
+    getScrollPosition() { return window.scrollY },
+    getCanScroll() { return document.documentElement.scrollHeight === document.documentElement.offsetHeight },
+    onScrollProgressionChange
   }
 
-  container.addEventListener('scroll', handleScrollProgressionChange)
-  container.addEventListener('resize', handleScrollProgressionChange)
-
-  return () => { 
-    container.removeEventListener('scroll', handleScrollProgressionChange) 
-    container.removeEventListener('resize', handleScrollProgressionChange) 
-    observer.disconnect()
+  function getRect() {
+    return {
+      width: window.innerWidth,
+      height: window.innerHeight,
+      left: 0,
+      top: 0,
+      right: window.innerWidth,
+      bottom: window.innerHeight
+    }
   }
 
-  function handleScrollProgressionChange() {
-    onChange(calculateScrollProgression({ element, container, start, end }))
+  function onScrollProgressionChange(fn) {
+    window.addEventListener('scroll', fn)
+    window.addEventListener('resize', fn)
+
+    return () => {
+      window.removeEventListener('scroll', fn) 
+      window.removeEventListener('resize', fn) 
+    }
   }
 }
 
-function warnIfNotScrollable(element) {
-  if (element !== window && element.scrollHeight === element.offsetHeight) {
-    console.warn('It seems the offsetParent of this element isn\'t scrollable. This is probably a mistake, since nothing will be animated in this case.')
+function elementContainer(element) {
+  console.log(element)
+  return {
+    getRect() { return element.getBoundingClientRect() },
+    getScrollPosition() { return element.scrollTop },
+    getCanScroll() { return element.scrollHeight === element.offsetHeight },
+    onScrollProgressionChange
+  }
+
+  function onScrollProgressionChange(fn) {
+    const observer = new ResizeObserver(fn)
+
+    observer.observe(element)
+    element.addEventListener('scroll', fn)
+
+    return () => {
+      element.removeEventListener('scroll', fn) 
+      observer.disconnect()
+    }
   }
 }
 
 function getOverflowContainer(element) {
   const parent = element.parentNode
-  if (!(parent instanceof Element)) return null
+  if (!(parent instanceof Element)) return window
 
   const style = getComputedStyle(parent, null)
   const isOverflowContainer = ['overflow', 'overflow-x', 'overflow-y']
@@ -64,13 +103,8 @@ function getOverflowContainer(element) {
   return isOverflowContainer ? parent : getOverflowContainer(parent)
 }
 
-function getWindowRect() {
-  return {
-    width: window.innerWidth,
-    height: window.innerHeight,
-    left: 0,
-    top: 0,
-    right: window.innerWidth,
-    bottom: window.innerHeight
+function warnIfNotScrollable(container) {
+  if (container.getCanScroll()) {
+    console.warn('It seems the overflow container of this element isn\'t scrollable. This might be a mistake, since nothing will be animated in this case.')
   }
 }
