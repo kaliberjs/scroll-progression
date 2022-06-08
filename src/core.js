@@ -34,15 +34,14 @@ function calculatePosition({ element, container, position, scrollPosition }) {
 }
 
 function getContainer(element) {
-  const overflowContainer = getOverflowContainer(element)
-  return overflowContainer === window ? windowContainer() : elementContainer(overflowContainer)
+  const scrollParent = getScrollParent(element)
+  return scrollParent === window ? windowContainer() : elementContainer(scrollParent)
 }
 
 function windowContainer() {
   return {
     getRect,
     getScrollPosition() { return window.scrollY },
-    getCanScroll() { return document.documentElement.scrollHeight === document.documentElement.offsetHeight },
     onScrollProgressionChange
   }
 
@@ -73,7 +72,6 @@ function elementContainer(element) {
   return {
     getRect() { return element.getBoundingClientRect() },
     getScrollPosition() { return element.scrollTop },
-    getCanScroll() { return element.scrollHeight === element.offsetHeight },
     onScrollProgressionChange
   }
 
@@ -90,13 +88,13 @@ function elementContainer(element) {
   }
 }
 
-function getOverflowContainer(element) {
+function getScrollParent(element) {
   const parent = element.parentNode
   if (!(parent instanceof Element)) return window
 
   const style = getComputedStyle(parent, null)
-  const isOverflowContainer = ['overflow', 'overflow-x', 'overflow-y']
+  const isScrollParent = ['overflow', 'overflow-y']
     .some(x => ['auto', 'scroll'].includes(style.getPropertyValue(x)))
 
-  return isOverflowContainer ? parent : getOverflowContainer(parent)
+  return isScrollParent ? parent : getScrollParent(parent)
 }

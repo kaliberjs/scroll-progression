@@ -1,5 +1,5 @@
 # `@kaliber/scroll-progression`
-Track the scroll progression between two points within an overflow container as a normalized number between 0 and 1. 
+Track the scroll progression between two points within an scroll parent as a normalized number between 0 and 1. 
 
 ## Motivation
 Animating things in reaction to scroll should be easy, also if you don't want to use GSAP's ScrollTrigger library. This library tracks you scroll progression and calls you back with a value between 0 and 1. This is perfect for animation, since you can apply easing functions to it and use linear interpolation (`lerp`) to map it to any output domain that you like. Total freedom!
@@ -29,7 +29,7 @@ When working with `@kaliber/build`, add `/@kaliber\/scroll-progression/` to your
 
 ## Usage
 
-This library tracks to progression of a given element between two points within its overflowing container. These two points are called scroll triggers. A scroll trigger consists of an `anchor` and (optionally) an `offset`. The anchor is a relative value based on the container's height. `0` means the top of the container, `1` means the bottom. If you need to increase or decrease with an amount of pixels, you can use the `offset` property for this. 
+This library tracks to progression of a given element between two points within its [scroll parent](#the-scroll-parent). These two points are called scroll triggers. A scroll trigger consists of an `anchor` and (optionally) an `offset`. The anchor is a relative value based on the container's height. `0` means the top of the container, `1` means the bottom. If you need to increase or decrease with an amount of pixels, you can use the `offset` property for this. 
 
 For instance: a scroll trigger describing the point 100 pixels below the top of an element is described as follows:
 
@@ -46,6 +46,9 @@ To ease the use of this library, a set of constants is exported which describe t
 | bottom  | `{ anchor: 1, offset: 0 }`  |
 
 Below are some examples to help you get a feeling for this. To view some examples in a practical setting, check the [`/example`](https://github.dev/kaliberjs/scroll-progression) folder!
+
+### The scroll parent
+The scroll parent of an element is found by finding the closest parent that has an `overflow` or `overflow-y` value of `auto` or `scroll`.
 
 #### Example 1
 
@@ -173,7 +176,10 @@ If you have a large page with animated components, you might start to notice som
 __🚨 Gotcha:__ *If you put `contain: layout;` on an element, don't but the `ref` returned by `useScrollProgression` on the same element.*
 
 ### Transforms
-This library uses `getBoundingClientRect()` to determine to position of objects on the screen. If you translate objects (or parents of objects) you're tracking within an overflow container, **transforms are taken into account** when calculating the position of the tracked element. This is probably what you want, but can be unexpected if you assumed `offsetTop` was used.
+This library uses `getBoundingClientRect()` to determine to position of objects on the screen. If you translate objects (or parents of objects) you're tracking within an scroll parent, **transforms are taken into account** when calculating the position of the tracked element. This is probably what you want, but can be unexpected if you assumed `offsetTop` was used.
+
+### Track horizontal scrolling
+Currently this library doesn't support horizontal scroll tracking. If this is something you need, please file an issue.
 
 ---
 
