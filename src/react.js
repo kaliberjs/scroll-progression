@@ -27,5 +27,5 @@ export function useScrollProgression({
     [node, start, end, clamp]
   )
 
-  return { ref: setNode }
+  return setNode
 }

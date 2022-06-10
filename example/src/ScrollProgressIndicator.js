@@ -8,7 +8,7 @@ export function ScrollProgressIndicator({ children }) {
     config: config.molasses
   }))
 
-  const { ref } = useScrollProgression({
+  const trackedElementRef = useScrollProgression({
     start: { element: c.top, container: c.top },
     end: { element: c.bottom, container: c.bottom },
     onChange(progression) {
@@ -17,7 +17,7 @@ export function ScrollProgressIndicator({ children }) {
   })
 
   return (
-    <div className={styles.component} {...{ ref }}>
+    <div className={styles.component} ref={trackedElementRef}>
       <animated.div className={styles.indicator} {...{ style }} />
       <div>
         {children}

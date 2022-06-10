@@ -9,7 +9,7 @@ export function ScrollAnimation({ layoutClassName = undefined }) {
     config: { tension: 500, friction: 35, clamp: true }
   }))
 
-  const { ref } = useScrollProgression({
+  const trackedElementRef = useScrollProgression({
     start: { element: c.bottom, container: c.bottom },
     end: { element: c.top, container: c.top },
     onChange(progression) {
@@ -19,7 +19,7 @@ export function ScrollAnimation({ layoutClassName = undefined }) {
 
   return (
     <div className={cx(styles.component, layoutClassName)}>
-      <div {...{ ref }} className={styles.container}>
+      <div ref={trackedElementRef} className={styles.container}>
         <Arc radius={100} thickness={25} from={0} to={x} />
       </div>
     </div>

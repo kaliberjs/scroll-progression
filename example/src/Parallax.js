@@ -9,7 +9,7 @@ export function Parallax({ src, distance, layoutClassName = undefined }) {
     config: { tension: 500, friction: 35 }
   }))
 
-  const { ref } = useScrollProgression({
+  const trackedElementRef = useScrollProgression({
     start: { element: c.top, container: c.bottom },
     end: { element: c.bottom, container: c.top },
     onChange(progression) {
@@ -18,7 +18,7 @@ export function Parallax({ src, distance, layoutClassName = undefined }) {
   })
 
   return (
-    <div className={cx(styles.component, layoutClassName)} {...{ ref }}>
+    <div className={cx(styles.component, layoutClassName)} ref={trackedElementRef}>
       <animated.img
         className={styles.image}
         style={{ 

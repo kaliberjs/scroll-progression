@@ -9,7 +9,7 @@ export function ScalingContentCard({ src, title, children }) {
     config: { tension: 500, friction: 35 }
   }))
 
-  const { ref } = useScrollProgression({
+  const trackedElementRef = useScrollProgression({
     start: { element: c.top, container: c.bottom },
     end: { element: c.top, container: { anchor: 0.25 } },
     onChange(progression) {
@@ -18,7 +18,7 @@ export function ScalingContentCard({ src, title, children }) {
   })
 
   return (
-    <section className={styles.component} {...{ ref }}>
+    <section className={styles.component} ref={trackedElementRef}>
       <header className={styles.header}>
         <h1 className={styles.title}>{title}</h1>
         <animated.img className={styles.image} {...{ src, style }} />

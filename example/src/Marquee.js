@@ -65,7 +65,7 @@ function MarqueeBase({ progression, direction, children }) {
 
 function useAnimatedScrollProgression() {
   const [{ progression }, spring] = useSpring(() => ({ progression: 0, config: { tension: 500, friction: 35 } }))
-  const { ref } = useScrollProgression({
+  const ref = useScrollProgression({
     start: { element: c.top, container: c.bottom },
     end: { element: c.bottom, container: c.top },
     onChange(progression) { spring.start({ progression }) }

@@ -118,7 +118,7 @@ const { ref } = onScrollProgression({
 ```js
 import { useScrollProgression, constants as c } from '@kaliber/scroll-progression'
 
-const { ref } = useScrollProgression({
+const trackedElementRef = useScrollProgression({
   start: { element: c.top, container: c.bottom },
   end: { element: c.bottom, container: c.top },
   onChange(progression) { /* Do something */ }

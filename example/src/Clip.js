@@ -9,7 +9,7 @@ export function Clip({ children }) {
     config: { tension: 500, friction: 35 }
   }))
 
-  const { ref } = useScrollProgression({
+  const trackedElementRef = useScrollProgression({
     start: { element: c.top, container: { anchor: 0.9 } },
     end: { element: c.top, container: { anchor: 0.9, offset: -200 } },
     onChange(progression) {
@@ -18,7 +18,7 @@ export function Clip({ children }) {
   })
 
   return (
-    <animated.div {...{ ref }} className={styles.component} style={{ opacity: clip }}>
+    <animated.div ref={trackedElementRef} className={styles.component} style={{ opacity: clip }}>
       <animated.div className={styles.clip} style={{
         clipPath: clip.to(x => {
           const edge = lerp({ start: 75, end: 0, input: x })
