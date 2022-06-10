@@ -21,7 +21,7 @@ export function useScrollProgression({
         start, 
         end, 
         clamp,
-        onChange(...args) { onChangeRef.current && onChangeRef.current(...args) }
+        onChange(...args) { onChangeRef.current(...args) }
       })
     },
     [node, start, end, clamp]
