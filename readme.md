@@ -7,11 +7,21 @@ Animating things in reaction to scroll should be easy, also if you don't want to
 ## Contents
 - [Installation](#installation)
 - [Usage](#usage)
+  - [The scroll parent](#the-scroll-parent)
+  - [Scroll triggers](#scroll-triggers)
+  - [Examples](#examples)
+    - [Parallax scrolling](#parallax-scrolling)
+    - [Playing video/animation on scroll](#playing-videoanimation-on-scroll)
+    - [Scroll reveals](#scroll-reveals)
+    - [Custom triggers](#custom-triggers)
   - [Usage with React](#usage-with-react)
   - [Usage with `react-spring`](#usage-with-react-spring)
+- [Examples](#examples)
 - [Tips & Gotcha's](#tips--gotchas)
   - [Do NOT use `vh` units in your page](#do-not-use-vh-units-in-your-page)
   - [Optimize performance with css `contain`](#optimize-performance-with-css-contain)
+  - [Transforms](#transforms)
+  - [Track horizontal scrolling](#track-horizontal-scrolling)
 
 ## Installation
 
@@ -27,9 +37,18 @@ When working with `@kaliber/build`, add `/@kaliber\/scroll-progression/` to your
 
 - `ResizeObserver`
 
+---
+
 ## Usage
 
-This library tracks to progression of a given element between two points within its [scroll parent](#the-scroll-parent). These two points are called scroll triggers. A scroll trigger consists of an `anchor` and (optionally) an `offset`. The anchor is a relative value based on the container's height. `0` means the top of the container, `1` means the bottom. If you need to increase or decrease with an amount of pixels, you can use the `offset` property for this. 
+This library tracks to progression of a given element between two points within its [scroll parent](#the-scroll-parent). These two points are called [scroll triggers](#scroll-triggers). 
+
+### The scroll parent
+The scroll parent of an element is found by finding the closest parent that has an `overflow` or `overflow-y` value of `auto` or `scroll`.
+
+### Scroll triggers
+
+All the functions defined in `@kaliber/scroll-progression/triggers` return an object consistsing of an `anchor` and (optionally) an `offset`. The anchor is a relative value based on the scroll parent's height. `0` means the top of the scroll parent, `1` means the bottom. If you need to increase or decrease with an amount of pixels, you can use the `offset` property for this. 
 
 For instance: a scroll trigger describing the point 100 pixels below the top of an element is described as follows:
 
@@ -39,77 +58,97 @@ For instance: a scroll trigger describing the point 100 pixels below the top of 
 
 To ease the use of this library, a set of constants is exported which describe the most common scroll triggers:
 
-| Constant  | Value  |
+| Function  |   |
 |---|---|
-| top  | `{ anchor: 0, offset: 0 }`  |
-| center  | `{ anchor: 0.5, offset: 0 }`  |
-| bottom  | `{ anchor: 1, offset: 0 }`  |
+| top  | `(offset = 0) => ({ anchor: 0, offset })`  |
+| center  | `(offset = 0) => ({ anchor: 0.5, offset: 0 })`  |
+| bottom  | `(offset = 0) => ({ anchor: 1, offset: 0 })`  |
+| fraction  | `(anchor, offset = 0) => ({ anchor, offset })`  |
 
 Below are some examples to help you get a feeling for this. To view some examples in a practical setting, check the [`/example`](https://github.dev/kaliberjs/scroll-progression) folder!
 
-### The scroll parent
-The scroll parent of an element is found by finding the closest parent that has an `overflow` or `overflow-y` value of `auto` or `scroll`.
+### Examples
 
-#### Example 1
+To build a bit of intuition of how to setup animated scroll progression, some examples:
 
-- Start when the __top of the element__ reaches the __bottom of the container__
-- End when the __bottom of the element__ reaches the __top of the container__
+1. [Parallax scrolling](#parallax-scrolling)
+2. [Playing video/animation on scroll](#playing-videoanimation-on-scroll)
+3. [Scroll reveals](#scroll-reveals)
+4. [Custom triggers](#custom-triggers)
+
+#### Parallax scrolling
+When parallax scrolling you want to animate whenever the element is visible, also when only just a fraction has entered/left the scroll parent. Specifically:
+
+- Start when the __top of the element__ reaches the __bottom of the scroll parent__
+- End when the __bottom of the element__ reaches the __top of the scroll parent__
 
 ```js
 import { onScrollProgression, constants as c } from '@kaliber/scroll-progression'
 
 const cleanup = onScrollProgression({
   element: component,
-  start: { element: c.top, container: c.bottom },
-  end: { element: c.bottom, container: c.top },
-  onChange(progression) { /* Do something */ }
+  start: { element: c.top, scrollParent: c.bottom },
+  end: { element: c.bottom, scrollParent: c.top },
+  onChange(progression) { 
+    /* setTranslateY(lerp({ start: -10%, end: 10%, input: progression })) */ 
+  }
 })
 ```
 
-#### Example 2
+#### Playing video/animation on scroll
+When controlling a video or animation, you want the user to be able to view the whole video/animation. Therefore you start tracking when the element is scrolled fully into view. You finishing tracking when the element reaches the top of the screen, but is still fully visible.
 
-- Start when the __top of the element__ reaches the __bottom of the container__
-- End when the __top of the element__ reaches __200 pixels above the bottom of the container__
+- Start when the __bottom of the element__ reaches the __bottom of the scroll parent__
+- End when the __top of the element__ reaches the __top of the scroll parent__
+
+```js
+import { onScrollProgression, constants as c } from '@kaliber/scroll-progression'
+
+const { ref } = onScrollProgression({
+  element: component,
+  start: { element: c.bottom, scrollParent: c.bottom },
+  end: { element: c.top, scrollParent: c.top },
+  onChange(progression) {
+    /* updateVideoProgress(progression) */ 
+  }
+})
+```
+
+#### Scroll reveals
+Animations start when the elements become visible, scrolling them into view. They are finished when they are still visible within the scroll parent. Specifically:
+
+- Start when the __top of the element__ reaches the __bottom of the scroll parent__
+- End when the __top of the element__ reaches __200 pixels above the bottom of the scroll parent__
 
 ```js
 import { onScrollProgression, constants as c } from '@kaliber/scroll-progression'
 
 onScrollProgression({
   element: component,
-  start: { element: c.bottom, container: c.bottom },
-  end: { element: c.top, container: { anchor: 1, offset: -200 } },
-  onChange(progression) { /* Do something */ }
+  start: { element: c.bottom, scrollParent: c.bottom },
+  end: { element: c.top, scrollParent: { anchor: 1, offset: -200 } },
+  onChange(progression) { 
+    /* setOpacity(progression) */ 
+  }
 })
 ```
 
-#### Example 3
+#### Custom triggers
+If the predefined triggers aren't exactly what you need, you can define your own. Consider the following case:
 
-- Start when the __bottom of the element__ reaches the __bottom of the container__
-- End when the __top of the element__ reaches the __top of the container__
+- Start when the *top of the element* reaches the *bottom of the scroll parent*
+- End when the *top of the element* reaches the point *200 pixels above 75% of the scroll parent, measured from the top of the scroll parent*
 
 ```js
 import { onScrollProgression, constants as c } from '@kaliber/scroll-progression'
 
 const { ref } = onScrollProgression({
   element: component,
-  start: { element: c.bottom, container: c.bottom },
-  end: { element: c.top, container: c.top },
-  onChange(progression) { /* Do something */ }
-})
-```
-
-#### Example 4
-- Start when the *top of the element* reaches the *bottom of the container*
-- End when the *top of the element* reaches the point *between the bottom and center of the container*
-
-```js
-import { onScrollProgression, constants as c } from '@kaliber/scroll-progression'
-
-const { ref } = onScrollProgression({
-  element: component,
-  start: { element: c.bottom, container: c.bottom },
-  end: { element: c.top, container: { anchor: 0.75 } },
-  onChange(progression) { /* Do something */ }
+  start: { element: c.bottom, scrollParent: c.bottom },
+  end: { element: c.top, scrollParent: { anchor: 0.75, offset: -200 } },
+  onChange(progression) { 
+    /* setOpacity(progression) */ 
+  }
 })
 ```
 
@@ -119,8 +158,8 @@ const { ref } = onScrollProgression({
 import { useScrollProgression, constants as c } from '@kaliber/scroll-progression'
 
 const trackedElementRef = useScrollProgression({
-  start: { element: c.top, container: c.bottom },
-  end: { element: c.bottom, container: c.top },
+  start: { element: c.top, scrollParent: c.bottom },
+  end: { element: c.bottom, scrollParent: c.top },
   onChange(progression) { /* Do something */ }
 })
 ```
@@ -152,14 +191,16 @@ Usage:
 
 ```js
 const { ref, spring } = useAnimatedScrollProgression({
-  start: { element: c.top, container: c.bottom },
-  end: { element: c.top, container: c.center },
+  start: { element: c.top, scrollParent: c.bottom },
+  end: { element: c.top, scrollParent: c.center },
   getSpringProps: x => ({
     opacity: x,
     scale: lerp({ start: 0.5, end: 1, input: easeOut(x) })
   })
 })
 ```
+
+---
 
 ## Tips & Gotcha's
 
