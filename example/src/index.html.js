@@ -18,7 +18,7 @@ export default (
       />
     </head>
     <body>
-      {/* Enable to test the elementContainer */}
+      {/* Enable to test the element scroll parent */}
       {/* <div style={{ height: '50vh', overflow: 'auto' }}> */}
         <App />
       {/* </div> */}

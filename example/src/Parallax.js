@@ -10,8 +10,8 @@ export function Parallax({ src, distance, layoutClassName = undefined }) {
   }))
 
   const trackedElementRef = useScrollProgression({
-    start: { element: c.top, container: c.bottom },
-    end: { element: c.bottom, container: c.top },
+    start: { element: c.top, scrollParent: c.bottom },
+    end: { element: c.bottom, scrollParent: c.top },
     onChange(progression) {
       spring.start({ y: lerp({ start: -distance, end: distance, input: progression }) })
     }

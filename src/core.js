@@ -1,44 +1,44 @@
 import { unlerp } from '@kaliber/math'
 
 export function onScrollProgression({ element, start, end, onChange }) {
-  const container = getContainer(element)
+  const scrollParent = getScrollParent(element)
 
   handleScrollProgressionChange()
   
-  return container.onScrollProgressionChange(handleScrollProgressionChange)
+  return scrollParent.onScrollProgressionChange(handleScrollProgressionChange)
 
   function handleScrollProgressionChange() {
-    onChange(calculateScrollProgression({ element, container, start, end }))
+    onChange(calculateScrollProgression({ element, scrollParent, start, end }))
   }
 }
 
-function calculateScrollProgression({ element, container, start, end }) {
-  const scrollPosition = container.getScrollPosition()
+function calculateScrollProgression({ element, scrollParent, start, end }) {
+  const scrollPosition = scrollParent.getScrollPosition()
   return unlerp({
-    start: calculatePosition({ element, container, position: start, scrollPosition }),
-    end: calculatePosition({ element, container, position: end, scrollPosition }),
+    start: calculatePosition({ element, scrollParent, position: start, scrollPosition }),
+    end: calculatePosition({ element, scrollParent, position: end, scrollPosition }),
     clamp: true,
     input: scrollPosition
   })
 }
 
-function calculatePosition({ element, container, position, scrollPosition }) {
+function calculatePosition({ element, scrollParent, position, scrollPosition }) {
   const elementRect = element.getBoundingClientRect()
-  const containerRect = container.getRect()
+  const scrollParentRect = scrollParent.getRect()
 
-  const offsetTop = elementRect.top + scrollPosition - containerRect.top
+  const offsetTop = elementRect.top + scrollPosition - scrollParentRect.top
   const elementPosition = position.element.anchor * elementRect.height + (position.element.offset ?? 0)
-  const containerPosition = position.container.anchor * containerRect.height + (position.container.offset ?? 0)
+  const scrollParentPosition = position.scrollParent.anchor * scrollParentRect.height + (position.scrollParent.offset ?? 0)
 
-  return offsetTop + elementPosition - containerPosition
+  return offsetTop + elementPosition - scrollParentPosition
 }
 
-function getContainer(element) {
+function getScrollParent(element) {
   const scrollParent = getScrollParent(element)
-  return scrollParent === window ? windowContainer() : elementContainer(scrollParent)
+  return scrollParent === window ? windowScrollParent() : elementScrollParent(scrollParent)
 }
 
-function windowContainer() {
+function windowScrollParent() {
   return {
     getRect,
     getScrollPosition() { return window.scrollY },
@@ -67,7 +67,7 @@ function windowContainer() {
   }
 }
 
-function elementContainer(element) {
+function elementScrollParent(element) {
   console.log(element)
   return {
     getRect() { return element.getBoundingClientRect() },

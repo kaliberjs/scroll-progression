@@ -10,8 +10,8 @@ export function ScrollAnimation({ layoutClassName = undefined }) {
   }))
 
   const trackedElementRef = useScrollProgression({
-    start: { element: c.bottom, container: c.bottom },
-    end: { element: c.top, container: c.top },
+    start: { element: c.bottom, scrollParent: c.bottom },
+    end: { element: c.top, scrollParent: c.top },
     onChange(progression) {
       spring.start({ to: easeInOut(progression) * 360 })
     }
@@ -19,7 +19,7 @@ export function ScrollAnimation({ layoutClassName = undefined }) {
 
   return (
     <div className={cx(styles.component, layoutClassName)}>
-      <div ref={trackedElementRef} className={styles.container}>
+      <div ref={trackedElementRef} className={styles.scrollParent}>
         <Arc radius={100} thickness={25} from={0} to={x} />
       </div>
     </div>

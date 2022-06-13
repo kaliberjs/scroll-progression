@@ -10,8 +10,8 @@ export function ScalingContentCard({ src, title, children }) {
   }))
 
   const trackedElementRef = useScrollProgression({
-    start: { element: c.top, container: c.bottom },
-    end: { element: c.top, container: { anchor: 0.25 } },
+    start: { element: c.top, scrollParent: c.bottom },
+    end: { element: c.top, scrollParent: { anchor: 0.25 } },
     onChange(progression) {
       spring.start({ scale: lerp({ start: 0.75, end: 1, input: easeOut(progression) }) })
     }

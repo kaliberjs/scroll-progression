@@ -18,7 +18,7 @@
   ],
   "private": false,
   "license": "MIT",
-  "description": "Track the scroll progression between two points within an overflow container as a normalized number between 0 and 1. Then use this value as input for animations!",
+  "description": "Track the scroll progression between two points within a scroll parent as a normalized number between 0 and 1. Then use this value as input for animations!",
   "repository": "https://github.com/kaliberjs/scroll-progression.git",
   "dependencies": {
     "@kaliber/math": "^1.1.2"

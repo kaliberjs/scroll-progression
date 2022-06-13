@@ -10,8 +10,8 @@ export function Clip({ children }) {
   }))
 
   const trackedElementRef = useScrollProgression({
-    start: { element: c.top, container: { anchor: 0.9 } },
-    end: { element: c.top, container: { anchor: 0.9, offset: -200 } },
+    start: { element: c.top, scrollParent: { anchor: 0.9 } },
+    end: { element: c.top, scrollParent: { anchor: 0.9, offset: -200 } },
     onChange(progression) {
       spring.start({ clip: easeOut(progression) })
     }

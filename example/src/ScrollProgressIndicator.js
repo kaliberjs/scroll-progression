@@ -9,8 +9,8 @@ export function ScrollProgressIndicator({ children }) {
   }))
 
   const trackedElementRef = useScrollProgression({
-    start: { element: c.top, container: c.top },
-    end: { element: c.bottom, container: c.bottom },
+    start: { element: c.top, scrollParent: c.top },
+    end: { element: c.bottom, scrollParent: c.bottom },
     onChange(progression) {
       spring.start({ scaleX: progression })
     }

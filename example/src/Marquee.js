@@ -38,16 +38,16 @@ export function Marquees({ lines }) {
 
 function MarqueeBase({ progression, direction, children }) {
   const { ref: itemSizeRef, size: itemSize } = useElementSize()
-  const { ref: containerSizeRef, size: containerSize } = useElementSize()
+  const { ref: scrollParentSizeRef, size: scrollParentSize } = useElementSize()
 
-  const repetitions = Math.max(2, itemSize.width ? Math.ceil(containerSize.width * 2 / itemSize.width) : 2)
+  const repetitions = Math.max(2, itemSize.width ? Math.ceil(scrollParentSize.width * 2 / itemSize.width) : 2)
 
   return (
     <animated.div 
       className={styles.componentBase} 
-      ref={containerSizeRef} 
+      ref={scrollParentSizeRef} 
       style={{
-        x: progression.to(x => x * direction * containerSize.width)
+        x: progression.to(x => x * direction * scrollParentSize.width)
       }}
     >
       <div className={styles.items}>
@@ -66,8 +66,8 @@ function MarqueeBase({ progression, direction, children }) {
 function useAnimatedScrollProgression() {
   const [{ progression }, spring] = useSpring(() => ({ progression: 0, config: { tension: 500, friction: 35 } }))
   const ref = useScrollProgression({
-    start: { element: c.top, container: c.bottom },
-    end: { element: c.bottom, container: c.top },
+    start: { element: c.top, scrollParent: c.bottom },
+    end: { element: c.bottom, scrollParent: c.top },
     onChange(progression) { spring.start({ progression }) }
   })
 

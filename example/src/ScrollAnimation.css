@@ -6,6 +6,6 @@
   background: #A8E536;
 }
 
-.container {
+.scrollParent {
   contain: style layout paint;
 }
