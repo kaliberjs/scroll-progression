@@ -1,6 +1,6 @@
 import { animated, useSpring } from 'react-spring'
 import { lerp } from '@kaliber/math'
-import { useScrollProgression, constants as c }  from '@kaliber/scroll-progression'
+import { useScrollProgression, triggers }  from '@kaliber/scroll-progression'
 import styles from './Parallax.css'
 
 export function Parallax({ src, distance, layoutClassName = undefined }) {
@@ -10,8 +10,8 @@ export function Parallax({ src, distance, layoutClassName = undefined }) {
   }))
 
   const trackedElementRef = useScrollProgression({
-    start: { element: c.top, scrollParent: c.bottom },
-    end: { element: c.bottom, scrollParent: c.top },
+    start: { element: triggers.top(), scrollParent: triggers.bottom() },
+    end: { element: triggers.bottom(), scrollParent: triggers.top() },
     onChange(progression) {
       spring.start({ y: lerp({ start: -distance, end: distance, input: progression }) })
     }

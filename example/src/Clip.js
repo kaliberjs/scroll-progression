@@ -1,6 +1,6 @@
 import { animated, useSpring } from 'react-spring'
 import { lerp } from '@kaliber/math'
-import { useScrollProgression, constants as c }  from '@kaliber/scroll-progression'
+import { useScrollProgression, triggers }  from '@kaliber/scroll-progression'
 import styles from './Clip.css'
 
 export function Clip({ children }) {
@@ -10,8 +10,8 @@ export function Clip({ children }) {
   }))
 
   const trackedElementRef = useScrollProgression({
-    start: { element: c.top, scrollParent: { anchor: 0.9 } },
-    end: { element: c.top, scrollParent: { anchor: 0.9, offset: -200 } },
+    start: { element: triggers.top(), scrollParent: triggers.custom(0.9) },
+    end: { element: triggers.top(), scrollParent: triggers.custom(0.9, -200) },
     onChange(progression) {
       spring.start({ clip: easeOut(progression) })
     }

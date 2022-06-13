@@ -27,15 +27,10 @@ function calculatePosition({ element, scrollParent, position, scrollPosition }) 
   const scrollParentRect = scrollParent.getRect()
 
   const offsetTop = elementRect.top + scrollPosition - scrollParentRect.top
-  const elementPosition = position.element.anchor * elementRect.height + (position.element.offset ?? 0)
-  const scrollParentPosition = position.scrollParent.anchor * scrollParentRect.height + (position.scrollParent.offset ?? 0)
+  const elementPosition = position.element.fraction * elementRect.height + (position.element.offset ?? 0)
+  const scrollParentPosition = position.scrollParent.fraction * scrollParentRect.height + (position.scrollParent.offset ?? 0)
 
   return offsetTop + elementPosition - scrollParentPosition
-}
-
-function getScrollParent(element) {
-  const scrollParent = getScrollParent(element)
-  return scrollParent === window ? windowScrollParent() : elementScrollParent(scrollParent)
 }
 
 function windowScrollParent() {
@@ -68,7 +63,6 @@ function windowScrollParent() {
 }
 
 function elementScrollParent(element) {
-  console.log(element)
   return {
     getRect() { return element.getBoundingClientRect() },
     getScrollPosition() { return element.scrollTop },
@@ -90,11 +84,13 @@ function elementScrollParent(element) {
 
 function getScrollParent(element) {
   const parent = element.parentNode
-  if (!(parent instanceof Element)) return window
+  if (!(parent instanceof Element)) return windowScrollParent() 
 
   const style = getComputedStyle(parent, null)
   const isScrollParent = ['overflow', 'overflow-y']
     .some(x => ['auto', 'scroll'].includes(style.getPropertyValue(x)))
 
-  return isScrollParent ? parent : getScrollParent(parent)
+  return isScrollParent
+    ? elementScrollParent(parent)
+    : getScrollParent(parent)
 }

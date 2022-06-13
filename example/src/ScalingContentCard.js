@@ -1,6 +1,6 @@
 import { animated, useSpring } from 'react-spring'
 import { lerp } from '@kaliber/math'
-import { useScrollProgression, constants as c }  from '@kaliber/scroll-progression'
+import { useScrollProgression, triggers }  from '@kaliber/scroll-progression'
 import styles from './ScalingContentCard.css'
 
 export function ScalingContentCard({ src, title, children }) {
@@ -10,8 +10,8 @@ export function ScalingContentCard({ src, title, children }) {
   }))
 
   const trackedElementRef = useScrollProgression({
-    start: { element: c.top, scrollParent: c.bottom },
-    end: { element: c.top, scrollParent: { anchor: 0.25 } },
+    start: { element: triggers.top(), scrollParent: triggers.bottom() },
+    end: { element: triggers.top(), scrollParent: triggers.custom(0.25) },
     onChange(progression) {
       spring.start({ scale: lerp({ start: 0.75, end: 1, input: easeOut(progression) }) })
     }

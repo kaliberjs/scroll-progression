@@ -48,28 +48,26 @@ The scroll parent of an element is found by finding the closest parent that has 
 
 ### Scroll triggers
 
-All the functions defined in `@kaliber/scroll-progression/triggers` return an object consistsing of an `anchor` and (optionally) an `offset`. The anchor is a relative value based on the scroll parent's height. `0` means the top of the scroll parent, `1` means the bottom. If you need to increase or decrease with an amount of pixels, you can use the `offset` property for this. 
+All the functions defined in `@kaliber/scroll-progression/triggers` return an object consisting of a `fraction` and (optionally) an `offset`. The `fraction` is a relative value based on the scroll parent's height. `0` means the top of the scroll parent, `1` means the bottom. If you need to increase or decrease with an amount of pixels, you can use the `offset` property for this. 
 
 For instance: a scroll trigger describing the point 100 pixels below the top of an element is described as follows:
 
 ```js
-{ anchor: 0, offset: 100 }
+{ fraction: 0, offset: 100 }
 ```
 
-To ease the use of this library, a set of constants is exported which describe the most common scroll triggers:
+To improve readability, a set of triggers is exported which describe the most common scroll triggers:
 
 | Function  |   |
 |---|---|
-| top  | `(offset = 0) => ({ anchor: 0, offset })`  |
-| center  | `(offset = 0) => ({ anchor: 0.5, offset: 0 })`  |
-| bottom  | `(offset = 0) => ({ anchor: 1, offset: 0 })`  |
-| fraction  | `(anchor, offset = 0) => ({ anchor, offset })`  |
+| top  | `(offset = 0) => ({ fraction: 0, offset })`  |
+| center  | `(offset = 0) => ({ fraction: 0.5, offset: 0 })`  |
+| bottom  | `(offset = 0) => ({ fraction: 1, offset: 0 })`  |
+| custom  | `(fraction, offset = 0) => ({ fraction, offset })`  |
 
 Below are some examples to help you get a feeling for this. To view some examples in a practical setting, check the [`/example`](https://github.dev/kaliberjs/scroll-progression) folder!
 
 ### Examples
-
-To build a bit of intuition of how to setup animated scroll progression, some examples:
 
 1. [Parallax scrolling](#parallax-scrolling)
 2. [Playing video/animation on scroll](#playing-videoanimation-on-scroll)
@@ -83,12 +81,12 @@ When parallax scrolling you want to animate whenever the element is visible, als
 - End when the __bottom of the element__ reaches the __top of the scroll parent__
 
 ```js
-import { onScrollProgression, constants as c } from '@kaliber/scroll-progression'
+import { onScrollProgression, triggers } from '@kaliber/scroll-progression'
 
 const cleanup = onScrollProgression({
   element: component,
-  start: { element: c.top, scrollParent: c.bottom },
-  end: { element: c.bottom, scrollParent: c.top },
+  start: { element: triggers.top(), scrollParent: triggers.bottom() },
+  end: { element: triggers.bottom(), scrollParent: triggers.top() },
   onChange(progression) { 
     /* setTranslateY(lerp({ start: -10%, end: 10%, input: progression })) */ 
   }
@@ -102,12 +100,12 @@ When controlling a video or animation, you want the user to be able to view the 
 - End when the __top of the element__ reaches the __top of the scroll parent__
 
 ```js
-import { onScrollProgression, constants as c } from '@kaliber/scroll-progression'
+import { onScrollProgression, triggers } from '@kaliber/scroll-progression'
 
 const { ref } = onScrollProgression({
   element: component,
-  start: { element: c.bottom, scrollParent: c.bottom },
-  end: { element: c.top, scrollParent: c.top },
+  start: { element: triggers.bottom(), scrollParent: triggers.bottom() },
+  end: { element: triggers.top(), scrollParent: triggers.top() },
   onChange(progression) {
     /* updateVideoProgress(progression) */ 
   }
@@ -121,12 +119,12 @@ Animations start when the elements become visible, scrolling them into view. The
 - End when the __top of the element__ reaches __200 pixels above the bottom of the scroll parent__
 
 ```js
-import { onScrollProgression, constants as c } from '@kaliber/scroll-progression'
+import { onScrollProgression, triggers } from '@kaliber/scroll-progression'
 
 onScrollProgression({
   element: component,
-  start: { element: c.bottom, scrollParent: c.bottom },
-  end: { element: c.top, scrollParent: { anchor: 1, offset: -200 } },
+  start: { element: triggers.bottom(), scrollParent: triggers.bottom() },
+  end: { element: triggers.top(), scrollParent: triggers.bottom(-200) },
   onChange(progression) { 
     /* setOpacity(progression) */ 
   }
@@ -136,16 +134,16 @@ onScrollProgression({
 #### Custom triggers
 If the predefined triggers aren't exactly what you need, you can define your own. Consider the following case:
 
-- Start when the *top of the element* reaches the *bottom of the scroll parent*
-- End when the *top of the element* reaches the point *200 pixels above 75% of the scroll parent, measured from the top of the scroll parent*
+- Start when the __top of the element__ reaches the __bottom of the scroll parent__
+- End when the __top of the element__ reaches the point __200 pixels above 75% of the scroll parent, measured from the top of the scroll parent__
 
 ```js
-import { onScrollProgression, constants as c } from '@kaliber/scroll-progression'
+import { onScrollProgression, triggers } from '@kaliber/scroll-progression'
 
 const { ref } = onScrollProgression({
   element: component,
-  start: { element: c.bottom, scrollParent: c.bottom },
-  end: { element: c.top, scrollParent: { anchor: 0.75, offset: -200 } },
+  start: { element: triggers.bottom(), scrollParent: triggers.bottom() },
+  end: { element: triggers.top(), scrollParent: triggers.custom(0.75, -200) },
   onChange(progression) { 
     /* setOpacity(progression) */ 
   }
@@ -155,11 +153,11 @@ const { ref } = onScrollProgression({
 ### Usage with React
 
 ```js
-import { useScrollProgression, constants as c } from '@kaliber/scroll-progression'
+import { useScrollProgression, triggers } from '@kaliber/scroll-progression'
 
 const trackedElementRef = useScrollProgression({
-  start: { element: c.top, scrollParent: c.bottom },
-  end: { element: c.bottom, scrollParent: c.top },
+  start: { element: triggers.top(), scrollParent: triggers.bottom() },
+  end: { element: triggers.bottom(), scrollParent: triggers.top() },
   onChange(progression) { /* Do something */ }
 })
 ```
@@ -191,8 +189,8 @@ Usage:
 
 ```js
 const { ref, spring } = useAnimatedScrollProgression({
-  start: { element: c.top, scrollParent: c.bottom },
-  end: { element: c.top, scrollParent: c.center },
+  start: { element: triggers.top(), scrollParent: triggers.bottom() },
+  end: { element: triggers.top(), scrollParent: triggers.center() },
   getSpringProps: x => ({
     opacity: x,
     scale: lerp({ start: 0.5, end: 1, input: easeOut(x) })

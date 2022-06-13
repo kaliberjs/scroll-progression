@@ -1,5 +1,5 @@
 import { useSpring } from 'react-spring'
-import { useScrollProgression, constants as c }  from '@kaliber/scroll-progression'
+import { useScrollProgression, triggers }  from '@kaliber/scroll-progression'
 import { Arc } from '/Arc'
 import styles from './ScrollAnimation.css'
 
@@ -10,8 +10,8 @@ export function ScrollAnimation({ layoutClassName = undefined }) {
   }))
 
   const trackedElementRef = useScrollProgression({
-    start: { element: c.bottom, scrollParent: c.bottom },
-    end: { element: c.top, scrollParent: c.top },
+    start: { element: triggers.bottom(), scrollParent: triggers.bottom() },
+    end: { element: triggers.top(), scrollParent: triggers.top() },
     onChange(progression) {
       spring.start({ to: easeInOut(progression) * 360 })
     }

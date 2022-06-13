@@ -1,5 +1,5 @@
 import { animated, useSpring, config } from 'react-spring'
-import { useScrollProgression, constants as c }  from '@kaliber/scroll-progression'
+import { useScrollProgression, triggers }  from '@kaliber/scroll-progression'
 import styles from './ScrollProgressIndicator.css'
 
 export function ScrollProgressIndicator({ children }) {
@@ -9,8 +9,8 @@ export function ScrollProgressIndicator({ children }) {
   }))
 
   const trackedElementRef = useScrollProgression({
-    start: { element: c.top, scrollParent: c.top },
-    end: { element: c.bottom, scrollParent: c.bottom },
+    start: { element: triggers.top(), scrollParent: triggers.top() },
+    end: { element: triggers.bottom(), scrollParent: triggers.bottom() },
     onChange(progression) {
       spring.start({ scaleX: progression })
     }
