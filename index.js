@@ -1,1 +1,3 @@
-export { hello } from './src/hello'
+export { triggers } from './src/triggers'
+export { onScrollProgression } from './src/core'
+export { useScrollProgression } from './src/react'
