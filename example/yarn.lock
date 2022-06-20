@@ -1300,10 +1300,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@kaliber/build@^0.0.125":
-  version "0.0.125"
-  resolved "https://registry.yarnpkg.com/@kaliber/build/-/build-0.0.125.tgz#cf023732e2f3fb259b64be47b11a6062d116cb8d"
-  integrity sha512-+WoTsP8KUc1m3gjN52PNf2SE/TC4B8C5EsRoMh8VM85incT6PyoBtbN8scPmGAkcvKzA6BGemlHAeI+ofZBhVA==
+"@kaliber/build@^0.0.126":
+  version "0.0.126"
+  resolved "https://registry.yarnpkg.com/@kaliber/build/-/build-0.0.126.tgz#ca5ad6994ca032072a2c6aec43e275334543dab6"
+  integrity sha512-SpYTPX1oAA9eZYVlODetXSVw59EPfZKgMPfSDf9lWxNaR6w0bc489dt+PSDKnnP2E0HxF8lSJ22wXZ1blQ4BIw==
   dependencies:
     "@babel/core" "^7.11.6"
     "@babel/eslint-parser" "^7.16.5"
@@ -1392,10 +1392,10 @@
   resolved "https://registry.yarnpkg.com/@kaliber/eslint-plugin/-/eslint-plugin-0.0.1.tgz#9d48c09602609c17a7cf8d91a7217d42a4580d0b"
   integrity sha512-TUzSR0hiU0VlSt3MwS+LsoXVkK4wJY0oJd0vTfad+9JgqRF/4dLmjzTqegoiBB7b+pxKDUaptu+R6cWgsO4tKA==
 
-"@kaliber/math@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@kaliber/math/-/math-1.1.2.tgz#775e4a1fc561f2c766e36389a12a408dec14e2bf"
-  integrity sha512-rv+aGYIpinEwLZ0PCSAVp1inp+dVb5K25rXmh3NPz9kRRQ8ZvdvqOZ8nzn6BemdVA8T+3FOPuKyR6yrvP/MINQ==
+"@kaliber/math@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@kaliber/math/-/math-1.1.3.tgz#356901c6d4815ee3fd2237fe9d1ed3255cd87fec"
+  integrity sha512-S9aaj9OlbVc6pErwbfX7W6TMsk76zxIJEFJn216Pn/QvtVx5xqCBwlkLFZTJbYlGE8km/0iBpuwsQTBj2nutVg==
 
 "@kaliber/use-element-size@^3.0.0":
   version "3.0.0"

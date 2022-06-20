@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@kaliber/math@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@kaliber/math/-/math-1.1.2.tgz#775e4a1fc561f2c766e36389a12a408dec14e2bf"
-  integrity sha512-rv+aGYIpinEwLZ0PCSAVp1inp+dVb5K25rXmh3NPz9kRRQ8ZvdvqOZ8nzn6BemdVA8T+3FOPuKyR6yrvP/MINQ==
+"@kaliber/math@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@kaliber/math/-/math-1.1.3.tgz#356901c6d4815ee3fd2237fe9d1ed3255cd87fec"
+  integrity sha512-S9aaj9OlbVc6pErwbfX7W6TMsk76zxIJEFJn216Pn/QvtVx5xqCBwlkLFZTJbYlGE8km/0iBpuwsQTBj2nutVg==

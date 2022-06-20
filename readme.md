@@ -30,7 +30,7 @@ Animating things in reaction to scroll should be easy, also if you don't want to
 ## Installation
 
 ```
-yarn add @kaliber/scroll-progression
+yarn add @kaliber/scroll-progression @kaliber/math
 ```
 
 #### Transpilation
