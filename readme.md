@@ -17,6 +17,10 @@ Animating things in reaction to scroll should be easy, also if you don't want to
   - [Usage with React](#usage-with-react)
   - [Usage with `react-spring`](#usage-with-react-spring)
 - [Examples](#examples)
+  - [Parallax scrolling](#parallax-scrolling)
+  - [Playing video/animation on scroll](#playing-videoanimation-on-scroll)
+  - [Scroll reveals](#scroll-reveals)
+  - [Custom triggers](#custom-triggers)
 - [Tips & Gotcha's](#tips--gotchas)
   - [Do NOT use `vh` units in your page](#do-not-use-vh-units-in-your-page)
   - [Optimize performance with css `contain`](#optimize-performance-with-css-contain)
@@ -65,14 +69,46 @@ To improve readability, a set of triggers is exported which describe the most co
 | bottom  | `(offset = 0) => ({ fraction: 1, offset: 0 })`  |
 | custom  | `(fraction, offset = 0) => ({ fraction, offset })`  |
 
-Below are some examples to help you get a feeling for this. To view some examples in a practical setting, check the [`/example`](https://github.dev/kaliberjs/scroll-progression) folder!
-
 ### Examples
 
-1. [Parallax scrolling](#parallax-scrolling)
-2. [Playing video/animation on scroll](#playing-videoanimation-on-scroll)
-3. [Scroll reveals](#scroll-reveals)
-4. [Custom triggers](#custom-triggers)
+
+```js
+onScrollProgression({
+   // The element we are determining the scroll progression for
+  element,
+
+  // The starting position (everything before this point results in 0)
+  start: {
+    // The start location relative to the element (in this case the top of the element)
+    element: { fraction: 0, offset: 0 }, 
+
+    // The start location relative to the scroll parent (in this case the bottom of the scroll parent)
+    scrollParent: { fraction: 1, offset: 0 },
+  },
+
+  // The end position (everything after this point results in 1)
+  end: {
+    // The end location relative to the element (in this case the bottom of the element)
+    element: { fraction: 1, offset: 0 },
+
+    // The end location relative to the element (in this case the top of the scroll parent)
+    scrollParent: { fraction: 0, offset: 0 },
+  },
+
+  // Callback, called when the progression (a value between 0 and 1) changes
+  onChange(progression) {
+    ...
+  }
+})
+```
+
+In the above example we are stating that we want to know the progression of the element from when starts to become visible at the bottom of the scroll parent (a progression near 0) until it is invisible at top of the scroll parent (a progression near 1).
+
+The progression in this example is used to track the position in the scroll parent from the moment it reaches the bottom all the way until it reaches the top. So as the element visually moves up (scrolling down) the progression will go from 0 to 1.
+
+In other words: we start when the top of the element touches the bottom of the scrollParent and we end when the bottom of the element touches the top of the scrollParent.
+
+Below are some more examples to help you get a feeling for this. To view some examples in a practical setting, check the [`/example`](https://github.dev/kaliberjs/scroll-progression) folder!
 
 #### Parallax scrolling
 When parallax scrolling you want to animate whenever the element is visible, also when only just a fraction has entered/left the scroll parent. Specifically:
