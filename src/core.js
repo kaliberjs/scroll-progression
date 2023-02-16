@@ -1,6 +1,6 @@
 import { unlerp } from '@kaliber/math'
 
-export function onScrollProgression({ element, start, end, onChange }) {
+export function onScrollProgression({ element, start, end, clamp = true, onChange }) {
   const scrollParent = getScrollParent(element)
 
   handleScrollProgressionChange()
@@ -8,16 +8,16 @@ export function onScrollProgression({ element, start, end, onChange }) {
   return scrollParent.onScrollProgressionChange(handleScrollProgressionChange)
 
   function handleScrollProgressionChange() {
-    onChange(calculateScrollProgression({ element, scrollParent, start, end }))
+    onChange(calculateScrollProgression({ element, scrollParent, start, end, clamp }))
   }
 }
 
-function calculateScrollProgression({ element, scrollParent, start, end }) {
+function calculateScrollProgression({ element, scrollParent, start, end, clamp }) {
   const scrollPosition = scrollParent.getScrollPosition()
   return unlerp({
     start: calculatePosition({ element, scrollParent, position: start, scrollPosition }),
     end: calculatePosition({ element, scrollParent, position: end, scrollPosition }),
-    clamp: true,
+    clamp,
     input: scrollPosition
   })
 }
