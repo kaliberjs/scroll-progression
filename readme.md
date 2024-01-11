@@ -209,11 +209,11 @@ function useAnimatedScrollProgression({ start, end, getSpringProps }) {
     config: { tension: 500, friction: 35 } 
   }))
 
-  const { ref } = useAnimatedScrollProgression({
+  const { ref } = useScrollProgression({
     start,
     end,
     onChange(input) {
-      spring.start(getSpringProps(input)) })
+      springApi.start(getSpringProps(input))
     }
   })
 
