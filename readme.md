@@ -213,7 +213,7 @@ function useAnimatedScrollProgression({ start, end, getSpringProps }) {
     start,
     end,
     onChange(input) {
-      spring.start(getSpringProps(input))
+      springApi.start(getSpringProps(input))
     }
   })
 
